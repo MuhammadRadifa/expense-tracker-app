@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
 
 @Composable
-fun AddExpenseScreen(){
+fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +50,7 @@ fun AddExpenseScreen(){
             .padding(20.dp)
     ) {
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = { showBottomSheet.value = false },
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = colorResource(id = R.color.secondary)
             )
@@ -195,10 +196,4 @@ fun InputForm(){
             Text(text = "Add Expense", fontSize = 18.sp, fontWeight = FontWeight.Medium)
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AddExpsenseScreenPreview(){
-    AddExpenseScreen()
 }
