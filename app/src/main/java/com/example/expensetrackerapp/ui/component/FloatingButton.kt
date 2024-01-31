@@ -10,7 +10,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.expensetrackerapp.R
 
 @Composable
 fun FloatingButton(){
@@ -19,6 +21,8 @@ fun FloatingButton(){
             .offset(y = 50.dp)
             .size(70.dp),
         shape = CircleShape,
+        containerColor = colorResource(id = R.color.background),
+        contentColor = colorResource(id = R.color.secondary),
         onClick = { /*TODO*/ }
     ) {
         Icon(
