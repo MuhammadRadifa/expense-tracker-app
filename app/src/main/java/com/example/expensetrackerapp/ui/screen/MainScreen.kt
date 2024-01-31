@@ -12,6 +12,7 @@ import com.example.expensetrackerapp.ui.component.BottomBar
 import com.example.expensetrackerapp.ui.component.FloatingButton
 import com.example.expensetrackerapp.ui.component.TopBar
 import com.example.expensetrackerapp.ui.screen.home.HomeScreen
+import com.example.expensetrackerapp.ui.screen.summary.SummaryScreen
 
 @Composable
 fun MainScreen(){
@@ -27,6 +28,7 @@ fun MainScreen(){
     ) {
         innerPadding ->
         //HomeScreen(innerPadding = innerPadding)
+        SummaryScreen(innerPadding = innerPadding)
     }
 }
 

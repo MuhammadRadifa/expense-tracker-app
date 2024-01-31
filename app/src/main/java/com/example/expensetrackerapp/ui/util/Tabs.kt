@@ -9,3 +9,8 @@ val TabsList = listOf<TabsItem>(
     TabsItem("This Week"),
     TabsItem("This Month")
 )
+
+val TabSummaryList = listOf<TabsItem>(
+    TabsItem("Month"),
+    TabsItem("Year")
+)
