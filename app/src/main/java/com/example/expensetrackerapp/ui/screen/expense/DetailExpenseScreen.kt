@@ -110,9 +110,3 @@ fun DetailExpenseScreen(){
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DetailExpenseScreenPreview(){
-    DetailExpenseScreen()
-}
