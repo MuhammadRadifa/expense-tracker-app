@@ -40,13 +40,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.expensetrackerapp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnBoardingScreen(){
+fun OnBoardingScreen(rootNavController:NavHostController){
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState {
@@ -86,7 +87,7 @@ fun OnBoardingScreen(){
         if(pagerState.currentPage == 2){
             Button(
                 modifier = Modifier.fillMaxWidth().padding(top = 100.dp, bottom = 80.dp).padding(horizontal = 10.dp),
-                onClick = { /*TODO*/ },
+                onClick = { rootNavController.navigate("mainScreen") },
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.background),
@@ -153,26 +154,4 @@ fun IndicatorNavigation(pagerState: PagerState,scope:CoroutineScope){
             }
         }
     }
-}
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun OnBoardingPreview(){
-
-//    OnBoardingScreen(
-//        imagePainter = R.drawable.undraw_mobile_content_xvgr,
-//        heightImage = 300,
-//        title = "Welcome to Expense Tracker",
-//        description = "Easily manage your finances. Expense Tracker helps you record and manage your daily expenses effortlessly")
-
-//    OnBoardingScreen(
-//        imagePainter = R.drawable.stat,
-//        heightImage = 200,
-//        title = "Record Expenses Quickly",
-//        description = "Expense Tracker makes daily expense tracking a breeze. Just a few taps to record your transactions"
-//    )
-
-    OnBoardingScreen()
-
 }

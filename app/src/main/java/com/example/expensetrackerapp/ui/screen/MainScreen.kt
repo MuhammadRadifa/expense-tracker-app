@@ -18,6 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.ui.component.BottomBar
 import com.example.expensetrackerapp.ui.component.FloatingButton
@@ -30,10 +34,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(){
+    val mainNavController = rememberNavController()
+    val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
-    val scope = rememberCoroutineScope()
     var showBottomSheet = remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -42,12 +47,14 @@ fun MainScreen(){
         floatingActionButton = { FloatingButton(showBottomSheet) },
         floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
-            BottomBar()
+            BottomBar(mainNavController,navBackStackEntry)
         }
     ) {
         innerPadding ->
-        //HomeScreen(innerPadding = innerPadding)
-        //SummaryScreen(innerPadding = innerPadding)
+        NavHost(navController = mainNavController, startDestination = "home" ){
+            composable(route="home"){ HomeScreen(innerPadding = innerPadding) }
+            composable(route="summary"){ SummaryScreen(innerPadding = innerPadding) }
+        }
         if (showBottomSheet.value) {
             ModalBottomSheet(
                 onDismissRequest = {
@@ -55,9 +62,6 @@ fun MainScreen(){
                 },
                 sheetState = sheetState,
             ) {
-
-
-                // Sheet content
                 AddExpenseScreen(showBottomSheet)
             }
         }
