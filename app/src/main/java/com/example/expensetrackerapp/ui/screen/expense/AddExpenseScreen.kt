@@ -13,6 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,10 +37,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -47,6 +57,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.ui.util.MainViewModel
+import com.example.expensetrackerapp.ui.util.categoriesImage
+import com.example.expensetrackerapp.ui.util.categoriesTitle
 import kotlinx.coroutines.launch
 
 @Composable
@@ -85,6 +97,7 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
 @Composable
 fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
     val scope = rememberCoroutineScope()
+    var showDialogCategories = remember{ mutableStateOf(false) }
     Column {
         Text(text = "Enter Amount", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
@@ -128,10 +141,10 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
             singleLine = true
         )
         Spacer(Modifier.height(16.dp))
-        Text(text = "Description", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
+        Text(text = "Category", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { showDialogCategories.value = true },
             contentPadding = PaddingValues(0.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -151,8 +164,9 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "category")
-                    Text(text = "Foods", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                    Icon(painter = painterResource(id = categoriesImage[viewModel.expenseState.category]!!), contentDescription = "category")
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(text = viewModel.expenseState.category, fontSize = 16.sp, fontWeight = FontWeight.Medium)
                 }
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
@@ -215,15 +229,19 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
         }
     }
 
+    if(showDialogCategories.value){
+        CategoryDialog(viewModel = viewModel, showDialog = showDialogCategories)
+    }
+
 }
 
 @Composable
-fun CategoryDialog(){
+fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
     Dialog(
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = { showDialog.value = false },
     ) {
         Column(
-            Modifier.fillMaxSize(),
+            Modifier.fillMaxSize().clip(shape = RoundedCornerShape(10)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -239,37 +257,47 @@ fun CategoryDialog(){
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(horizontal = 10.dp)
-                        .defaultMinSize(minWidth = 1.dp, minHeight = 10.dp)
-                    ,
-                    shape = RoundedCornerShape(20),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.secondary),
-                        contentColor = colorResource(id = R.color.background),
-                    )
-                ) {
-                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Button",
-                            modifier = Modifier.size(28.dp)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(text = "Foods", fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
+                LazyVerticalGrid(columns = GridCells.Fixed(2),Modifier.padding(bottom = 16.dp)){
+                    items(categoriesTitle){
+                        title ->
+                        val isSelected = title == viewModel.expenseState.category
+                        Button(
+                            onClick = {
+                                viewModel.onStateChange(category = title)
+                                showDialog.value = false
+                                      },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .padding(4.dp)
+                                .defaultMinSize(minWidth = 1.dp, minHeight = 10.dp)
+                            ,
+                            shape = RoundedCornerShape(20),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(id =if(isSelected) R.color.background else R.color.secondary),
+                                contentColor = colorResource(id =if(isSelected)R.color.secondary else R.color.background),
+                            )
+                        ) {
+                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    painter = painterResource(id = categoriesImage[title]!!),
+                                    contentDescription = "Button",
+                                    modifier = Modifier.size(28.dp)
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text(text = title, fontSize = 12.sp, fontWeight = FontWeight.Medium, color = if(isSelected)Color.White else Color.Gray)
+                            }
+                        }
                     }
                 }
+
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun CategoryDialogPreview(){
-    CategoryDialog()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun CategoryDialogPreview(){
+//    CategoryDialog()
+//}

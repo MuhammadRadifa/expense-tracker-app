@@ -13,7 +13,7 @@ data class Expense(
     @ColumnInfo(name = "description")
     var description:String = "",
     @ColumnInfo(name = "category")
-    var category:String = "",
+    var category:String = "Foods",
     @ColumnInfo(name = "date")
     var date:String = ""
 )
