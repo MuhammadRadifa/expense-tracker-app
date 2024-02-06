@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "expense")
 data class Expense(
     @PrimaryKey(autoGenerate = true)
-    val id:Long = 0L,
+    var id:Long = 0L,
     @ColumnInfo(name = "amount")
-    val amount:Int = 0,
+    var amount:Int = 0,
     @ColumnInfo(name = "description")
-    val description:String = "",
+    var description:String = "",
     @ColumnInfo(name = "category")
-    val category:String = "",
+    var category:String = "",
     @ColumnInfo(name = "date")
-    val date:String = ""
+    var date:String = ""
 )

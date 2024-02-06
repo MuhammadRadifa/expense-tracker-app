@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,9 +41,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
+import com.example.expensetrackerapp.ui.util.MainViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>){
+fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,12 +73,13 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>){
             color = Color.Gray,
         )
         Spacer(Modifier.height(16.dp))
-        InputForm()
+        InputForm(showBottomSheet,viewModel)
     }
 }
 
 @Composable
-fun InputForm(){
+fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
+    val scope = rememberCoroutineScope()
     Column {
         Text(text = "Enter Amount", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
@@ -90,8 +94,8 @@ fun InputForm(){
                 unfocusedContainerColor = colorResource(id = R.color.secondary),
                 unfocusedIndicatorColor = colorResource(id = R.color.secondary),
             ),
-            value = "",
-            onValueChange = {},
+            value = viewModel.expenseState.amount.toString(),
+            onValueChange = {viewModel.onStateChange(amount = it.toInt())},
             leadingIcon = {
                 Text(text = "Rp")
             },
@@ -112,8 +116,8 @@ fun InputForm(){
                 unfocusedContainerColor = colorResource(id = R.color.secondary),
                 unfocusedIndicatorColor = colorResource(id = R.color.secondary)
             ),
-            value = "",
-            onValueChange = {},
+            value = viewModel.expenseState.description,
+            onValueChange = {viewModel.onStateChange(desc = it)},
             placeholder = { Text(text = "Burger King And Coca Cola", color = Color.Gray) },
             singleLine = true
         )
@@ -191,9 +195,18 @@ fun InputForm(){
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.background)
             ),
-            onClick = { /*TODO*/ }
+            onClick = {
+                viewModel.addExpense(
+                    viewModel.expenseState
+                )
+
+                scope.launch {
+                    showBottomSheet.value = false
+                }
+            }
         ) {
             Text(text = "Add Expense", fontSize = 18.sp, fontWeight = FontWeight.Medium)
         }
     }
+
 }

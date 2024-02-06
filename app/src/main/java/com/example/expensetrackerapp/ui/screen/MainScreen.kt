@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,11 +30,13 @@ import com.example.expensetrackerapp.ui.component.TopBar
 import com.example.expensetrackerapp.ui.screen.expense.AddExpenseScreen
 import com.example.expensetrackerapp.ui.screen.home.HomeScreen
 import com.example.expensetrackerapp.ui.screen.summary.SummaryScreen
+import com.example.expensetrackerapp.ui.util.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(){
+    val viewModel:MainViewModel = viewModel()
     val mainNavController = rememberNavController()
     val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
     val sheetState = rememberModalBottomSheetState(
@@ -52,7 +55,7 @@ fun MainScreen(){
     ) {
         innerPadding ->
         NavHost(navController = mainNavController, startDestination = "home" ){
-            composable(route="home"){ HomeScreen(innerPadding = innerPadding) }
+            composable(route="home"){ HomeScreen(innerPadding = innerPadding, viewModel = viewModel) }
             composable(route="summary"){ SummaryScreen(innerPadding = innerPadding) }
         }
         if (showBottomSheet.value) {
@@ -62,7 +65,7 @@ fun MainScreen(){
                 },
                 sheetState = sheetState,
             ) {
-                AddExpenseScreen(showBottomSheet)
+                AddExpenseScreen(showBottomSheet,viewModel)
             }
         }
     }
