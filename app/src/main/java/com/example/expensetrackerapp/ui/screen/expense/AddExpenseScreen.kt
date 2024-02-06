@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
@@ -31,15 +33,18 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import kotlinx.coroutines.launch
@@ -100,7 +105,8 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
                 Text(text = "Rp")
             },
             placeholder = { Text(text = "10.000", color = Color.Gray) },
-            singleLine = true
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
         Spacer(Modifier.height(16.dp))
         Text(text = "Description", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
@@ -209,4 +215,61 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
         }
     }
 
+}
+
+@Composable
+fun CategoryDialog(){
+    Dialog(
+        onDismissRequest = { /*TODO*/ },
+    ) {
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Column(
+                Modifier
+                    .padding(10.dp)
+                    .background(Color.White)) {
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "Select Your Category",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(horizontal = 10.dp)
+                        .defaultMinSize(minWidth = 1.dp, minHeight = 10.dp)
+                    ,
+                    shape = RoundedCornerShape(20),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.secondary),
+                        contentColor = colorResource(id = R.color.background),
+                    )
+                ) {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Button",
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = "Foods", fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CategoryDialogPreview(){
+    CategoryDialog()
 }
