@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp.ui.screen.expense
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,29 +29,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
+import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.ui.util.MainViewModel
+import kotlin.math.exp
 
 @Composable
-fun DetailExpenseScreen(){
+fun DetailExpenseScreen(showBottomSheet: MutableState<Boolean>, expense: Expense){
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(10.dp).padding(bottom = 32.dp).background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Expense Transaction Details",
-            fontWeight = FontWeight.Medium,
-            fontSize = 18.sp
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
         )
         Spacer(Modifier.height(16.dp))
         Column(Modifier.fillMaxWidth()) {
             Text(
-                text = "Burger and Coca cola",
+                text = expense.description,
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray
             )
             Text(
-                text = "Rp. 10.000",
+                text = expense.amount.toString(),
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp
             )
@@ -62,7 +67,7 @@ fun DetailExpenseScreen(){
                 color = Color.Gray
             )
             Text(
-                text = "Foods",
+                text = expense.category,
                 fontWeight = FontWeight.Bold,
             )
         }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,6 +64,7 @@ fun MainScreen(){
                 onDismissRequest = {
                     showBottomSheet.value = false
                 },
+                containerColor = Color.White,
                 sheetState = sheetState,
             ) {
                 AddExpenseScreen(showBottomSheet,viewModel)
