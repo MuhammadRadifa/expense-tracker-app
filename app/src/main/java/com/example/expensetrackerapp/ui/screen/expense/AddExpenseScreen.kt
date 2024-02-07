@@ -56,13 +56,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.expensetrackerapp.R
+import com.example.expensetrackerapp.data.Expense
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.categoriesImage
 import com.example.expensetrackerapp.ui.util.categoriesTitle
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
+fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,expense: Expense = Expense()){
     Column(
         modifier = Modifier
             .fillMaxSize()

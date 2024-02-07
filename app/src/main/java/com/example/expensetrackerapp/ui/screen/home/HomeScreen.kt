@@ -129,7 +129,7 @@ fun ListSummary(viewModel: MainViewModel){
         LazyColumn{
             items(expenseList.value, key = {key -> key.id}){
                 expense ->
-                CardItem(expense)
+                CardItem(expense, viewModel)
             }
         }
     }
@@ -137,7 +137,7 @@ fun ListSummary(viewModel: MainViewModel){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardItem(expense: Expense){
+fun CardItem(expense: Expense,viewModel: MainViewModel){
     val showBottomSheetDetail = remember{ mutableStateOf(false) }
     Spacer(Modifier.height(16.dp))
     Card(
@@ -183,8 +183,9 @@ fun CardItem(expense: Expense){
         }
         if(showBottomSheetDetail.value){
             ModalBottomSheet(onDismissRequest = { showBottomSheetDetail.value = false }, containerColor = Color.White) {
-                DetailExpenseScreen(showBottomSheet = showBottomSheetDetail, expense = expense)
+                DetailExpenseScreen(showBottomSheet = showBottomSheetDetail, viewModel = viewModel, expense = expense)
             }
         }
+
     }
 }

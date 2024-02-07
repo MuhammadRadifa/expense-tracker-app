@@ -42,4 +42,10 @@ class MainViewModel(
         }
     }
 
+    fun deleteExpense(expense: Expense){
+        viewModelScope.launch(Dispatchers.IO){
+            _expenseRepository.deleteExpense(expense)
+        }
+    }
+
 }
