@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.ui.screen.expense.AddExpenseScreen
 import com.example.expensetrackerapp.ui.screen.expense.DetailExpenseScreen
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.TabsList
@@ -139,6 +141,10 @@ fun ListSummary(viewModel: MainViewModel){
 @Composable
 fun CardItem(expense: Expense,viewModel: MainViewModel){
     val showBottomSheetDetail = remember{ mutableStateOf(false) }
+    val showBottomSheetModify = remember{ mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
     Spacer(Modifier.height(16.dp))
     Card(
         modifier = Modifier
@@ -183,9 +189,19 @@ fun CardItem(expense: Expense,viewModel: MainViewModel){
         }
         if(showBottomSheetDetail.value){
             ModalBottomSheet(onDismissRequest = { showBottomSheetDetail.value = false }, containerColor = Color.White) {
-                DetailExpenseScreen(showBottomSheet = showBottomSheetDetail, viewModel = viewModel, expense = expense)
+                DetailExpenseScreen(showBottomSheet = showBottomSheetDetail,showBottomSheetModify = showBottomSheetModify, viewModel = viewModel, expense = expense)
             }
         }
-
+        if (showBottomSheetModify.value) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheetModify.value = false
+                },
+                containerColor = Color.White,
+                sheetState = sheetState,
+            ) {
+                AddExpenseScreen(showBottomSheetModify,viewModel,expense)
+            }
+        }
     }
 }

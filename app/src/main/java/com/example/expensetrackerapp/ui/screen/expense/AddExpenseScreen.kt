@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp.ui.screen.expense
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +66,18 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,expense: Expense = Expense()){
+    val isUpdate = expense.id != 0L
+    LaunchedEffect(isUpdate){
+        if(isUpdate){
+            viewModel.onStateChange(
+                date = expense.date,
+                amount = expense.amount,
+                category = expense.category,
+                desc = expense.description
+            )
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +85,10 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
             .padding(20.dp)
     ) {
         IconButton(
-            onClick = { showBottomSheet.value = false },
+            onClick = {
+                showBottomSheet.value = false
+                viewModel.resetState()
+                      },
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = colorResource(id = R.color.secondary)
             )
@@ -80,7 +97,7 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
         }
         Spacer(Modifier.height(16.dp))
         Text(
-            text = "Add New Expense",
+            text = if(isUpdate)"Modify Expense" else "Add New Expense",
             fontSize = 28.sp,
             fontWeight = FontWeight(600)
         )
@@ -91,14 +108,15 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
             color = Color.Gray,
         )
         Spacer(Modifier.height(16.dp))
-        InputForm(showBottomSheet,viewModel)
+        InputForm(showBottomSheet,viewModel,isUpdate,expense.id)
     }
 }
 
 @Composable
-fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
+fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isUpdate:Boolean,id:Long){
     val scope = rememberCoroutineScope()
     var showDialogCategories = remember{ mutableStateOf(false) }
+
     Column {
         Text(text = "Enter Amount", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
@@ -217,16 +235,30 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel){
                 containerColor = colorResource(id = R.color.background)
             ),
             onClick = {
-                viewModel.addExpense(
-                    viewModel.expenseState
-                )
+                if(isUpdate){
+                    viewModel.updateExpense(
+                        Expense(
+                            id = id,
+                            amount = viewModel.expenseState.amount,
+                            description = viewModel.expenseState.description,
+                            category = viewModel.expenseState.category,
+                            date = viewModel.expenseState.date
+                        )
+                    )
+                }else{
+                    viewModel.addExpense(
+                        viewModel.expenseState
+                    )
+                }
+
+                viewModel.resetState()
 
                 scope.launch {
                     showBottomSheet.value = false
                 }
             }
         ) {
-            Text(text = "Add Expense", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+            Text(text = if(isUpdate)"Update Expense" else "Add Expense", fontSize = 18.sp, fontWeight = FontWeight.Medium)
         }
     }
 
@@ -242,7 +274,9 @@ fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
         onDismissRequest = { showDialog.value = false },
     ) {
         Column(
-            Modifier.fillMaxSize().clip(shape = RoundedCornerShape(10)),
+            Modifier
+                .fillMaxSize()
+                .clip(shape = RoundedCornerShape(10)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

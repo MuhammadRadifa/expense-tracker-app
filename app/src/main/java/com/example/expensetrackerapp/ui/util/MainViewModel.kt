@@ -36,9 +36,25 @@ class MainViewModel(
         )
     }
 
+    fun resetState(){
+        expenseState = expenseState.copy(
+            id = 0L,
+            category = "Foods",
+            amount = 0,
+            description = "",
+            date = ""
+        )
+    }
+
     fun addExpense(expense: Expense){
         viewModelScope.launch(Dispatchers.IO) {
             _expenseRepository.addExpense(expense)
+        }
+    }
+
+    fun updateExpense(expense: Expense){
+        viewModelScope.launch(Dispatchers.IO) {
+            _expenseRepository.updateExpense(expense)
         }
     }
 

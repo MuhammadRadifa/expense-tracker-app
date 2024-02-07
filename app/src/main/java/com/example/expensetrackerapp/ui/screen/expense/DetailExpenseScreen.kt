@@ -34,7 +34,7 @@ import com.example.expensetrackerapp.ui.util.MainViewModel
 import kotlin.math.exp
 
 @Composable
-fun DetailExpenseScreen(showBottomSheet: MutableState<Boolean>,viewModel: MainViewModel, expense: Expense){
+fun DetailExpenseScreen(showBottomSheet: MutableState<Boolean>,showBottomSheetModify: MutableState<Boolean>,viewModel: MainViewModel, expense: Expense){
     Column(
         Modifier
             .fillMaxWidth()
@@ -86,7 +86,10 @@ fun DetailExpenseScreen(showBottomSheet: MutableState<Boolean>,viewModel: MainVi
         Spacer(Modifier.height(30.dp))
         Row(Modifier.fillMaxWidth()) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          showBottomSheet.value = false
+                            showBottomSheetModify.value = true
+                },
                 shape = RoundedCornerShape(20),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFEDEFF3),
