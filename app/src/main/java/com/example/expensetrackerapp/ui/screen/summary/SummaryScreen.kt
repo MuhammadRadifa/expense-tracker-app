@@ -48,7 +48,7 @@ import com.example.expensetrackerapp.ui.util.categoriesImage
 
 @Composable
 fun SummaryScreen(innerPadding:PaddingValues = PaddingValues(20.dp),viewModel: MainViewModel){
-    var tabIndex = remember{ mutableIntStateOf(1) }
+    var tabIndex = remember{ mutableIntStateOf(0) }
     val expenseList = when (tabIndex.value) {
         0-> viewModel.getAllExpenseMonth.collectAsState(initial = listOf())
         else -> viewModel.getAllExpenseYear.collectAsState(initial = listOf())
@@ -154,7 +154,10 @@ fun CardSummaryItem(categories:String,expenseList: State<List<Expense>>,totalAmo
                         fontWeight = FontWeight.Medium
                     )
                     Spacer(Modifier.height(8.dp))
-                    LinearProgressIndicator(progress = (percentage/100).toFloat())
+                    LinearProgressIndicator(
+                        progress = (percentage/100).toFloat(),
+                        color = colorResource(id = R.color.background)
+                    )
                 }
             }
             Column(
