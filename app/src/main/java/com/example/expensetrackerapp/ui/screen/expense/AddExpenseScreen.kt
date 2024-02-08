@@ -29,13 +29,20 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -59,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.categoriesImage
 import com.example.expensetrackerapp.ui.util.categoriesTitle
@@ -116,6 +124,7 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
 fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isUpdate:Boolean,id:Long){
     val scope = rememberCoroutineScope()
     var showDialogCategories = remember{ mutableStateOf(false) }
+    var showDialogDate = remember{ mutableStateOf(false) }
 
     Column {
         Text(text = "Enter Amount", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
@@ -198,7 +207,7 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
         Text(text = "Date", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { showDialogDate.value = true },
             contentPadding = PaddingValues(0.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -217,7 +226,7 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "08/20/2024", fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
+                Text(text = DateConverter(viewModel.expenseState.date), fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Button",
@@ -266,6 +275,9 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
         CategoryDialog(viewModel = viewModel, showDialog = showDialogCategories)
     }
 
+    if(showDialogDate.value){
+        DateDialog(showDialog = showDialogDate, viewModel = viewModel)
+    }
 }
 
 @Composable
@@ -329,6 +341,44 @@ fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateDialog(showDialog:MutableState<Boolean>,viewModel: MainViewModel){
+    val state = rememberDatePickerState()
+
+    DatePickerDialog(
+        onDismissRequest = {showDialog.value = false },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showDialog.value = false
+                }
+            ) {
+                viewModel.onStateChange(date = state.selectedDateMillis)
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    showDialog.value = false
+                }
+            ) {
+                Text("CANCEL")
+            }
+        },
+        colors = DatePickerDefaults.colors(
+            containerColor = Color.White
+        )
+        ) {
+        DatePicker(
+            state = state,
+        )
+    }
+    
+
 }
 
 //@Preview(showBackground = true)

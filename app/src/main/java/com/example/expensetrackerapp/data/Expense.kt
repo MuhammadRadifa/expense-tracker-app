@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity(tableName = "expense")
 data class Expense(
     @PrimaryKey(autoGenerate = true)
@@ -15,5 +16,5 @@ data class Expense(
     @ColumnInfo(name = "category")
     var category:String = "Foods",
     @ColumnInfo(name = "date")
-    var date:String = ""
+    var date:Long = System.currentTimeMillis()
 )

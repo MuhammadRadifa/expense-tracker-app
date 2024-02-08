@@ -44,6 +44,7 @@ import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
 import com.example.expensetrackerapp.ui.screen.expense.AddExpenseScreen
 import com.example.expensetrackerapp.ui.screen.expense.DetailExpenseScreen
+import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.TabsList
 import com.example.expensetrackerapp.ui.util.categoriesImage
@@ -176,7 +177,7 @@ fun CardItem(expense: Expense,viewModel: MainViewModel){
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = "10:00 Wita",
+                        text = DateConverter(expense.date),
                         color = Color.Gray,
                         fontWeight = FontWeight.Medium
                     )

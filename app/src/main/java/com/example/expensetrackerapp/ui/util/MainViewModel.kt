@@ -27,7 +27,7 @@ class MainViewModel(
         }
     }
 
-    fun onStateChange(amount: Int? = null, desc: String? = null, category: String? = null, date: String? = null) {
+    fun onStateChange(amount: Int? = null, desc: String? = null, category: String? = null, date: Long? = null) {
         expenseState = expenseState.copy(
             amount = amount ?: expenseState.amount,
             description = desc ?: expenseState.description,
@@ -42,7 +42,7 @@ class MainViewModel(
             category = "Foods",
             amount = 0,
             description = "",
-            date = ""
+            date = System.currentTimeMillis()
         )
     }
 

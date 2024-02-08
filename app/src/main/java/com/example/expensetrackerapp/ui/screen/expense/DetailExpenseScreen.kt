@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import kotlin.math.exp
 
@@ -79,7 +80,7 @@ fun DetailExpenseScreen(showBottomSheet: MutableState<Boolean>,showBottomSheetMo
                 color = Color.Gray
             )
             Text(
-                text = "Sat, 3 june 2024",
+                text = DateConverter(expense.date),
                 fontWeight = FontWeight.Bold,
             )
         }
