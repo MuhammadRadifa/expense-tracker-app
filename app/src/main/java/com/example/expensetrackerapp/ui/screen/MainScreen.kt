@@ -59,7 +59,7 @@ fun MainScreen(){
         innerPadding ->
         NavHost(navController = mainNavController, startDestination = "home" ){
             composable(route="home"){ HomeScreen(innerPadding = innerPadding, viewModel = viewModel) }
-            composable(route="summary"){ SummaryScreen(innerPadding = innerPadding) }
+            composable(route="summary"){ SummaryScreen(innerPadding = innerPadding, viewModel = viewModel) }
         }
         if (showBottomSheet.value) {
             ModalBottomSheet(
