@@ -10,6 +10,12 @@ val TabsList = listOf<TabsItem>(
     TabsItem("This Month")
 )
 
+val TabsMap = mapOf<Int,String>(
+    0 to  "Today",
+    1 to "This Week",
+    2 to "This Month"
+)
+
 val TabSummaryList = listOf<TabsItem>(
     TabsItem("Month"),
     TabsItem("Year")

@@ -27,8 +27,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,6 +49,7 @@ import com.example.expensetrackerapp.ui.screen.expense.DetailExpenseScreen
 import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.TabsList
+import com.example.expensetrackerapp.ui.util.TabsMap
 import com.example.expensetrackerapp.ui.util.categoriesImage
 
 @Composable
@@ -54,14 +57,15 @@ fun HomeScreen(
     innerPadding:PaddingValues = PaddingValues(20.dp),
     viewModel: MainViewModel
 ){
+    var tabIndex = remember{ mutableIntStateOf(0) }
     Column(
         Modifier
             .fillMaxSize()
             .padding(innerPadding)
             .padding(10.dp)) {
-        Tabs()
+        Tabs(tabIndex)
         Spacer(Modifier.height(16.dp))
-        SummaryBox()
+        SummaryBox(tabIndex)
         Spacer(Modifier.height(16.dp))
         ListSummary(viewModel = viewModel)
 
@@ -69,18 +73,19 @@ fun HomeScreen(
 }
 
 @Composable
-fun Tabs(){
+fun Tabs(tabIndex:MutableIntState){
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        TabsList.forEach{
-            items ->
+        TabsList.forEachIndexed{
+            index,items ->
+            val isSelected = tabIndex.value == index
             OutlinedButton(
-                onClick = {  },
+                onClick = { tabIndex.value = index },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.secondary),
-                    contentColor = colorResource(id = R.color.background)
+                    containerColor = colorResource(id = if(isSelected)R.color.background else R.color.secondary),
+                    contentColor = colorResource(id = if(isSelected)R.color.secondary else R.color.background)
                 )
             ) {
                 Text(items.title)
@@ -92,7 +97,7 @@ fun Tabs(){
 }
 
 @Composable
-fun SummaryBox(){
+fun SummaryBox(tabIndex:MutableIntState){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,7 +110,7 @@ fun SummaryBox(){
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Spend So Far",
+            text = "Spend So Far ${TabsMap[tabIndex.value]!!}",
             color = Color.White,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
@@ -124,7 +129,7 @@ fun SummaryBox(){
 fun ListSummary(viewModel: MainViewModel){
     Column{
         Text(
-            text = "Today, 3 Oct",
+            text = "Today , ${DateConverter(System.currentTimeMillis())}",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
@@ -204,5 +209,5 @@ fun CardItem(expense: Expense,viewModel: MainViewModel){
                 AddExpenseScreen(showBottomSheetModify,viewModel,expense)
             }
         }
-    }
+}
 }
