@@ -47,6 +47,7 @@ import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
 import com.example.expensetrackerapp.ui.screen.expense.AddExpenseScreen
 import com.example.expensetrackerapp.ui.screen.expense.DetailExpenseScreen
+import com.example.expensetrackerapp.ui.util.ConvertDecimal
 import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.TabsList
@@ -122,7 +123,7 @@ fun SummaryBox(tabIndex:Int, expenseList: State<List<Expense>>){
             fontWeight = FontWeight.Medium
         )
         Text(
-            text = "Rp. $expenseListSummary",
+            text = "Rp. ${ConvertDecimal(expenseListSummary)}",
             color = Color.White,
             fontSize = 40.sp,
             fontWeight = FontWeight.Medium,
@@ -195,7 +196,7 @@ fun CardItem(expense: Expense,viewModel: MainViewModel){
                 }
             }
             Text(
-                text = expense.amount.toString(),
+                text = "Rp. ${ConvertDecimal(expense.amount)}",
                 fontWeight = FontWeight.Medium
             )
         }
