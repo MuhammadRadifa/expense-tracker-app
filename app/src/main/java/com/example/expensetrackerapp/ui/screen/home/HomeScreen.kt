@@ -29,6 +29,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,32 +58,36 @@ fun HomeScreen(
     innerPadding:PaddingValues = PaddingValues(20.dp),
     viewModel: MainViewModel
 ){
-    var tabIndex = remember{ mutableIntStateOf(0) }
+    val expenseList = when (viewModel.tabIndexState) {
+        0 -> viewModel.getAllExpenseDay.collectAsState(initial = listOf())
+        1 -> viewModel.getAllExpenseMonth.collectAsState(initial = listOf())
+        else -> viewModel.getAllExpenseYear.collectAsState(initial = listOf())
+    }
     Column(
         Modifier
             .fillMaxSize()
             .padding(innerPadding)
             .padding(10.dp)) {
-        Tabs(tabIndex)
+        Tabs(viewModel.tabIndexState, viewModel = viewModel)
         Spacer(Modifier.height(16.dp))
-        SummaryBox(tabIndex)
+        SummaryBox(viewModel.tabIndexState,expenseList)
         Spacer(Modifier.height(16.dp))
-        ListSummary(viewModel = viewModel)
+        ListSummary(viewModel = viewModel,expenseList)
 
     }
 }
 
 @Composable
-fun Tabs(tabIndex:MutableIntState){
+fun Tabs(tabIndex:Int,viewModel: MainViewModel){
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         TabsList.forEachIndexed{
             index,items ->
-            val isSelected = tabIndex.value == index
+            val isSelected = tabIndex == index
             OutlinedButton(
-                onClick = { tabIndex.value = index },
+                onClick = { viewModel.changeTabIndex(index) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = if(isSelected)R.color.background else R.color.secondary),
                     contentColor = colorResource(id = if(isSelected)R.color.secondary else R.color.background)
@@ -97,7 +102,8 @@ fun Tabs(tabIndex:MutableIntState){
 }
 
 @Composable
-fun SummaryBox(tabIndex:MutableIntState){
+fun SummaryBox(tabIndex:Int, expenseList: State<List<Expense>>){
+    var expenseListSummary = expenseList.value.sumOf { it.amount }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,13 +116,13 @@ fun SummaryBox(tabIndex:MutableIntState){
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Spend So Far ${TabsMap[tabIndex.value]!!}",
+            text = "Spend So Far ${TabsMap[tabIndex]!!}",
             color = Color.White,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
         Text(
-            text = "Rp. 200.000",
+            text = "Rp. $expenseListSummary",
             color = Color.White,
             fontSize = 40.sp,
             fontWeight = FontWeight.Medium,
@@ -126,14 +132,14 @@ fun SummaryBox(tabIndex:MutableIntState){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListSummary(viewModel: MainViewModel){
+fun ListSummary(viewModel:MainViewModel, expenseList: State<List<Expense>>){
     Column{
         Text(
             text = "Today , ${DateConverter(System.currentTimeMillis())}",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
-        val expenseList = viewModel.getAllExpense.collectAsState(initial = listOf())
+
         LazyColumn{
             items(expenseList.value, key = {key -> key.id}){
                 expense ->

@@ -18,12 +18,19 @@ class MainViewModel(
 ):ViewModel() {
 
     var expenseState by mutableStateOf(Expense())
+    var tabIndexState by mutableIntStateOf(0)
 
     lateinit var getAllExpense: Flow<List<Expense>>
+    lateinit var getAllExpenseYear: Flow<List<Expense>>
+    lateinit var getAllExpenseMonth: Flow<List<Expense>>
+    lateinit var getAllExpenseDay:Flow<List<Expense>>
 
     init {
         viewModelScope.launch {
             getAllExpense = _expenseRepository.getAllExpense()
+            getAllExpenseYear= _expenseRepository.getAllExpenseFilter("%Y")
+            getAllExpenseMonth= _expenseRepository.getAllExpenseFilter("%Y-%m")
+            getAllExpenseDay = _expenseRepository.getAllExpenseFilter("%Y-%m-%d")
         }
     }
 
@@ -44,6 +51,11 @@ class MainViewModel(
             description = "",
             date = System.currentTimeMillis()
         )
+    }
+
+
+    fun changeTabIndex(index:Int){
+        tabIndexState = index
     }
 
     fun addExpense(expense: Expense){

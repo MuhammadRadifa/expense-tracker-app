@@ -9,7 +9,9 @@ class ExpenseRepository(private val expenseDao:ExpenseDao){
 
     fun getAllExpense(): Flow<List<Expense>> = expenseDao.getAllExpense()
 
-    fun getExpenseById(id:Long):Flow<Expense> = expenseDao.getExpenseById(id)
+    fun getAllExpenseFilter(filter:String): Flow<List<Expense>> = expenseDao.getAllExpenseFilter(filter)
+
+    //fun getExpenseById(id:Long):Flow<Expense> = expenseDao.getExpenseById(id)
 
     suspend fun updateExpense(expense: Expense){
         expenseDao.updateExpense(expense)
