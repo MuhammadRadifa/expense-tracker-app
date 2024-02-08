@@ -15,8 +15,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.expensetrackerapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,22 +35,5 @@ fun TopBar(){
                 modifier = Modifier.padding(16.dp),
                 fontWeight = FontWeight.Medium
             ) },
-        navigationIcon = {
-            IconButton(onClick = { /* do something */ }, modifier = Modifier.padding(16.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Localized description"
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { /* do something */ },modifier = Modifier.padding(16.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-        }
     )
 }

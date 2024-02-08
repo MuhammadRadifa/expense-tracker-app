@@ -86,7 +86,7 @@ fun OnBoardingScreen(rootNavController:NavHostController){
         }
         if(pagerState.currentPage == 2){
             Button(
-                modifier = Modifier.fillMaxWidth().padding(top = 100.dp, bottom = 80.dp).padding(horizontal = 10.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 100.dp, bottom = 40.dp).padding(horizontal = 10.dp),
                 onClick = { rootNavController.navigate("mainScreen") },
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(
