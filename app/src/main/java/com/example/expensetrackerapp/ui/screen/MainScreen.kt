@@ -37,8 +37,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(){
-    val viewModel:MainViewModel = viewModel()
+fun MainScreen(viewModel: MainViewModel){
+
     val mainNavController = rememberNavController()
     val navBackStackEntry by mainNavController.currentBackStackEntryAsState()
     val sheetState = rememberModalBottomSheetState(
@@ -74,10 +74,4 @@ fun MainScreen(){
         }
     }
 
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MainScreenPreview(){
-    MainScreen()
 }

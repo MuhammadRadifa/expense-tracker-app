@@ -42,12 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.expensetrackerapp.R
+import com.example.expensetrackerapp.ui.util.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnBoardingScreen(rootNavController:NavHostController){
+fun OnBoardingScreen(rootNavController:NavHostController,viewModel: MainViewModel){
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState {
@@ -87,7 +88,10 @@ fun OnBoardingScreen(rootNavController:NavHostController){
         if(pagerState.currentPage == 2){
             Button(
                 modifier = Modifier.fillMaxWidth().padding(top = 100.dp, bottom = 40.dp).padding(horizontal = 10.dp),
-                onClick = { rootNavController.navigate("mainScreen") },
+                onClick = {
+                    viewModel.saveOnBoarding()
+                    rootNavController.navigate("mainScreen")
+                          },
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.background),
