@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp.ui.screen.summary
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -66,7 +67,25 @@ fun SummaryScreen(innerPadding:PaddingValues = PaddingValues(20.dp),viewModel: M
         Spacer(Modifier.height(16.dp))
         Tabs(tabIndex)
         Spacer(Modifier.height(16.dp))
-        SummaryList(expenseList)
+        if (expenseList.value.isEmpty()){
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.height(48.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.undraw_no_data_re_kwbl),
+                    contentDescription = "No Expense Yet",
+                    modifier = Modifier.size(200.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "No Expense Yet",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }else{
+            SummaryList(expenseList)
+        }
+
     }
 }
 

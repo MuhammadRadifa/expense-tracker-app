@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp.ui.screen.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -140,11 +141,27 @@ fun ListSummary(viewModel:MainViewModel, expenseList: State<List<Expense>>){
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
-
-        LazyColumn{
-            items(expenseList.value, key = {key -> key.id}){
-                expense ->
-                CardItem(expense, viewModel)
+        if(expenseList.value.isEmpty()){
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.height(48.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.undraw_no_data_re_kwbl),
+                    contentDescription = "No Expense Yet",
+                    modifier = Modifier.size(200.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "No Expense Yet",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }else{
+            LazyColumn{
+                items(expenseList.value, key = {key -> key.id}){
+                        expense ->
+                    CardItem(expense, viewModel)
+                }
             }
         }
     }
