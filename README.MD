@@ -1,4 +1,4 @@
-## NEWS APP
+## EXPENSE TRACKER APP
 
 <img src="./Thumbnail.png"/>
 
