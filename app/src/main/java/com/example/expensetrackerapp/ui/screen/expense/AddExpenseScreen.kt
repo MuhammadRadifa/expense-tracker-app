@@ -73,10 +73,14 @@ import com.example.expensetrackerapp.ui.util.categoriesTitle
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,expense: Expense = Expense()){
+fun AddExpenseScreen(
+    showBottomSheet: MutableState<Boolean>,
+    viewModel: MainViewModel,
+    expense: Expense = Expense()
+) {
     val isUpdate = expense.id != 0L
-    LaunchedEffect(isUpdate){
-        if(isUpdate){
+    LaunchedEffect(isUpdate) {
+        if (isUpdate) {
             viewModel.onStateChange(
                 date = expense.date,
                 amount = expense.amount,
@@ -96,7 +100,7 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
             onClick = {
                 showBottomSheet.value = false
                 viewModel.resetState()
-                      },
+            },
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = colorResource(id = R.color.secondary)
             )
@@ -105,7 +109,7 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
         }
         Spacer(Modifier.height(16.dp))
         Text(
-            text = if(isUpdate)"Modify Expense" else "Add New Expense",
+            text = if (isUpdate) "Modify Expense" else "Add New Expense",
             fontSize = 28.sp,
             fontWeight = FontWeight(600)
         )
@@ -116,18 +120,23 @@ fun AddExpenseScreen(showBottomSheet:MutableState<Boolean>,viewModel: MainViewMo
             color = Color.Gray,
         )
         Spacer(Modifier.height(16.dp))
-        InputForm(showBottomSheet,viewModel,isUpdate,expense.id)
+        InputForm(showBottomSheet, viewModel, isUpdate, expense.id)
     }
 }
 
 @Composable
-fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isUpdate:Boolean,id:Long){
+fun InputForm(
+    showBottomSheet: MutableState<Boolean>,
+    viewModel: MainViewModel,
+    isUpdate: Boolean,
+    id: Long
+) {
     val scope = rememberCoroutineScope()
-    var showDialogCategories = remember{ mutableStateOf(false) }
-    var showDialogDate = remember{ mutableStateOf(false) }
+    var showDialogCategories = remember { mutableStateOf(false) }
+    var showDialogDate = remember { mutableStateOf(false) }
 
     Column {
-        Text(text = "Enter Amount", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
+        Text(text = "Enter Amount", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             modifier = Modifier
@@ -141,7 +150,9 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 unfocusedIndicatorColor = colorResource(id = R.color.secondary),
             ),
             value = viewModel.expenseState.amount.toString(),
-            onValueChange = {viewModel.onStateChange(amount = it.toInt())},
+            onValueChange = {
+                viewModel.onStateChange(amount = if(it.isBlank())0 else it.toInt())
+            },
             leadingIcon = {
                 Text(text = "Rp")
             },
@@ -150,7 +161,7 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
         Spacer(Modifier.height(16.dp))
-        Text(text = "Description", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
+        Text(text = "Description", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             modifier = Modifier
@@ -164,12 +175,12 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 unfocusedIndicatorColor = colorResource(id = R.color.secondary)
             ),
             value = viewModel.expenseState.description,
-            onValueChange = {viewModel.onStateChange(desc = it)},
+            onValueChange = { viewModel.onStateChange(desc = it) },
             placeholder = { Text(text = "Burger King And Coca Cola", color = Color.Gray) },
             singleLine = true
         )
         Spacer(Modifier.height(16.dp))
-        Text(text = "Category", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
+        Text(text = "Category", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Button(
             onClick = { showDialogCategories.value = true },
@@ -192,9 +203,16 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(painter = painterResource(id = categoriesImage[viewModel.expenseState.category]!!), contentDescription = "category")
+                    Icon(
+                        painter = painterResource(id = categoriesImage[viewModel.expenseState.category]!!),
+                        contentDescription = "category"
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = viewModel.expenseState.category, fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                    Text(
+                        text = viewModel.expenseState.category,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowRight,
@@ -204,7 +222,7 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
             }
         }
         Spacer(Modifier.height(16.dp))
-        Text(text = "Date", fontSize = 18.sp ,fontWeight = FontWeight.Bold)
+        Text(text = "Date", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Button(
             onClick = { showDialogDate.value = true },
@@ -226,7 +244,12 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = DateConverter(viewModel.expenseState.date), fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
+                Text(
+                    text = DateConverter(viewModel.expenseState.date),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Gray
+                )
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Button",
@@ -244,7 +267,7 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 containerColor = colorResource(id = R.color.background)
             ),
             onClick = {
-                if(isUpdate){
+                if (isUpdate) {
                     viewModel.updateExpense(
                         Expense(
                             id = id,
@@ -254,7 +277,7 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                             date = viewModel.expenseState.date
                         )
                     )
-                }else{
+                } else {
                     viewModel.addExpense(
                         viewModel.expenseState
                     )
@@ -267,21 +290,25 @@ fun InputForm(showBottomSheet:MutableState<Boolean>,viewModel: MainViewModel,isU
                 }
             }
         ) {
-            Text(text = if(isUpdate)"Update Expense" else "Add Expense", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = if (isUpdate) "Update Expense" else "Add Expense",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 
-    if(showDialogCategories.value){
+    if (showDialogCategories.value) {
         CategoryDialog(viewModel = viewModel, showDialog = showDialogCategories)
     }
 
-    if(showDialogDate.value){
+    if (showDialogDate.value) {
         DateDialog(showDialog = showDialogDate, viewModel = viewModel)
     }
 }
 
 @Composable
-fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
+fun CategoryDialog(viewModel: MainViewModel, showDialog: MutableState<Boolean>) {
     Dialog(
         onDismissRequest = { showDialog.value = false },
     ) {
@@ -295,7 +322,8 @@ fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
             Column(
                 Modifier
                     .padding(10.dp)
-                    .background(Color.White)) {
+                    .background(Color.White)
+            ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = "Select Your Category",
@@ -304,35 +332,41 @@ fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                LazyVerticalGrid(columns = GridCells.Fixed(2),Modifier.padding(bottom = 16.dp)){
-                    items(categoriesTitle){
-                        title ->
+                LazyVerticalGrid(columns = GridCells.Fixed(2), Modifier.padding(bottom = 16.dp)) {
+                    items(categoriesTitle) { title ->
                         val isSelected = title == viewModel.expenseState.category
                         Button(
                             onClick = {
                                 viewModel.onStateChange(category = title)
                                 showDialog.value = false
-                                      },
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(56.dp)
                                 .padding(4.dp)
-                                .defaultMinSize(minWidth = 1.dp, minHeight = 10.dp)
-                            ,
+                                .defaultMinSize(minWidth = 1.dp, minHeight = 10.dp),
                             shape = RoundedCornerShape(20),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = colorResource(id =if(isSelected) R.color.background else R.color.secondary),
-                                contentColor = colorResource(id =if(isSelected)R.color.secondary else R.color.background),
+                                containerColor = colorResource(id = if (isSelected) R.color.background else R.color.secondary),
+                                contentColor = colorResource(id = if (isSelected) R.color.secondary else R.color.background),
                             )
                         ) {
-                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Icon(
                                     painter = painterResource(id = categoriesImage[title]!!),
                                     contentDescription = "Button",
                                     modifier = Modifier.size(28.dp)
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
-                                Text(text = title, fontSize = 12.sp, fontWeight = FontWeight.Medium, color = if(isSelected)Color.White else Color.Gray)
+                                Text(
+                                    text = title,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = if (isSelected) Color.White else Color.Gray
+                                )
                             }
                         }
                     }
@@ -345,11 +379,11 @@ fun CategoryDialog(viewModel: MainViewModel,showDialog:MutableState<Boolean>){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateDialog(showDialog:MutableState<Boolean>,viewModel: MainViewModel){
+fun DateDialog(showDialog: MutableState<Boolean>, viewModel: MainViewModel) {
     val state = rememberDatePickerState()
 
     DatePickerDialog(
-        onDismissRequest = {showDialog.value = false },
+        onDismissRequest = { showDialog.value = false },
         confirmButton = {
             TextButton(
                 onClick = {
@@ -372,12 +406,12 @@ fun DateDialog(showDialog:MutableState<Boolean>,viewModel: MainViewModel){
         colors = DatePickerDefaults.colors(
             containerColor = Color.White
         )
-        ) {
+    ) {
         DatePicker(
             state = state,
         )
     }
-    
+
 
 }
 
