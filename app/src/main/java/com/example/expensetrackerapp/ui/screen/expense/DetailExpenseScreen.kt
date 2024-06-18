@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.data.currencySymbol
 import com.example.expensetrackerapp.ui.util.ConvertDecimal
 import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
@@ -56,7 +57,7 @@ fun DetailExpenseScreen(showBottomSheet: MutableState<Boolean>,showBottomSheetMo
                 color = Color.Gray
             )
             Text(
-                text = "Rp. ${ConvertDecimal(expense.amount)}",
+                text = "${currencySymbol} ${ConvertDecimal(expense.amount)}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp
             )

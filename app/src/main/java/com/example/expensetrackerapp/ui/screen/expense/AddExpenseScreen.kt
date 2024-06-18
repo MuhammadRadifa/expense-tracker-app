@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.data.currencySymbol
 import com.example.expensetrackerapp.ui.util.DateConverter
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.categoriesImage
@@ -154,7 +155,7 @@ fun InputForm(
                 viewModel.onStateChange(amount = if(it.isBlank())0 else it.toInt())
             },
             leadingIcon = {
-                Text(text = "Rp")
+                Text(text = currencySymbol)
             },
             placeholder = { Text(text = "10.000", color = Color.Gray) },
             singleLine = true,

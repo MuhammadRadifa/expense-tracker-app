@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.data.currencySymbol
 import com.example.expensetrackerapp.ui.screen.expense.AddExpenseScreen
 import com.example.expensetrackerapp.ui.screen.expense.DetailExpenseScreen
 import com.example.expensetrackerapp.ui.util.ConvertDecimal
@@ -124,7 +125,7 @@ fun SummaryBox(tabIndex:Int, expenseList: State<List<Expense>>){
             fontWeight = FontWeight.Medium
         )
         Text(
-            text = "Rp. ${ConvertDecimal(expenseListSummary)}",
+            text = "${currencySymbol} ${ConvertDecimal(expenseListSummary)}",
             color = Color.White,
             fontSize = 40.sp,
             fontWeight = FontWeight.Medium,
@@ -213,7 +214,7 @@ fun CardItem(expense: Expense,viewModel: MainViewModel){
                 }
             }
             Text(
-                text = "Rp. ${ConvertDecimal(expense.amount)}",
+                text = "${currencySymbol} ${ConvertDecimal(expense.amount)}",
                 fontWeight = FontWeight.Medium
             )
         }

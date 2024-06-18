@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.expensetrackerapp.R
 import com.example.expensetrackerapp.data.Expense
+import com.example.expensetrackerapp.data.currencySymbol
 import com.example.expensetrackerapp.ui.util.ConvertDecimal
 import com.example.expensetrackerapp.ui.util.MainViewModel
 import com.example.expensetrackerapp.ui.util.TabSummaryList
@@ -183,7 +184,7 @@ fun CardSummaryItem(categories:String,expenseList: State<List<Expense>>,totalAmo
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "Rp. ${ConvertDecimal(amountCategory)}",
+                    text = "${currencySymbol} ${ConvertDecimal(amountCategory)}",
                     fontWeight = FontWeight.Bold
                 )
                 Text(
